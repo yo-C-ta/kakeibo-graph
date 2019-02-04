@@ -1,12 +1,14 @@
 <template>
   <div>
+    月ごとの{{category}}の支出額
     <LineChart :chart-data="chartData" :chart-options="chartOptions"></LineChart>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 import LineChart from '@/components/charts/LineChart.vue';
+import Chart from 'chart.js';
 
 @Component({
   components: {
@@ -14,6 +16,8 @@ import LineChart from '@/components/charts/LineChart.vue';
   },
 })
 export default class MonthlyChart extends Vue {
+  @Prop() public years!: string[];
+  @Prop() public category!: string;
   @Prop() public data!: Array<{
     year: string,
     month: string,
@@ -22,21 +26,30 @@ export default class MonthlyChart extends Vue {
     where: string,
     who: string,
   }>;
-  @Prop() public years!: string[];
-  @Prop() public category!: string;
 
-  private chartData: any;
-  private chartOptions: any;
+  private chartData: Chart.ChartData = {};
+  private chartOptions: Chart.ChartOptions = {};
 
   private created() {
+    this.updateChart();
+  }
+
+  @Watch('years')
+  private updtYears() {
+    this.updateChart();
+  }
+  @Watch('category')
+  private updtCtgry() {
+    this.updateChart();
+  }
+
+  private updateChart() {
     const palette = require('google-palette');
     const colors = palette('mpn65', this.years.length).map((hex: number) => {
       return '#' + hex;
     });
     this.chartData = {
-      // ラベル
       labels: [...Array(12).keys()].map((x: number) => (x.toString() + '月')),
-      // データ詳細
       datasets: this.years.map((x: string, idx: number) => {
         return {
           label: x,
@@ -46,11 +59,9 @@ export default class MonthlyChart extends Vue {
         };
       }),
     };
-
     this.chartOptions = {
       title: {
-        display: true,
-        text: '月毎の' + this.category + '支出額',
+        display: false,
       },
       tooltips: {
         mode: 'index',
@@ -66,7 +77,6 @@ export default class MonthlyChart extends Vue {
           },
         }],
         yAxes: [{
-          // stacked: true,
           scaleLabel: {
             display: true,
             labelString: '金額',

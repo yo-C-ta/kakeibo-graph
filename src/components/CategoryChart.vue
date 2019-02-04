@@ -1,12 +1,13 @@
 <template>
-  <div>
+  <div>カテゴリー毎の支出額
     <LineChart :chart-data="chartData" :chart-options="chartOptions"></LineChart>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 import LineChart from '@/components/charts/LineChart.vue';
+import Chart from 'chart.js';
 
 @Component({
   components: {
@@ -14,6 +15,7 @@ import LineChart from '@/components/charts/LineChart.vue';
   },
 })
 export default class CategoryChart extends Vue {
+  @Prop() public years!: string[];
   @Prop() public data!: Array<{
     year: string,
     month: string,
@@ -22,38 +24,20 @@ export default class CategoryChart extends Vue {
     where: string,
     who: string,
   }>;
-  @Prop() public years!: string[];
 
-  private chartData: any;
-  private chartOptions = {
-    title: {
-      display: true,
-      text: 'カテゴリー毎の支出額',
-    },
-    tooltips: {
-      mode: 'index',
-    },
-    hover: {
-      mode: 'index',
-    },
-    scales: {
-      xAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: 'カテゴリー',
-        },
-      }],
-      yAxes: [{
-        // stacked: true,
-        scaleLabel: {
-          display: true,
-          labelString: '金額',
-        },
-      }],
-    },
-  };
+  private chartData: Chart.ChartData = {};
+  private chartOptions: Chart.ChartOptions = {};
 
   private created() {
+    this.updateChart();
+  }
+
+  @Watch('years')
+  private updtYears() {
+    this.updateChart();
+  }
+
+  private updateChart() {
     const categoryChartData = this.categoryData();
     const palette = require('google-palette');
     const colors = palette('mpn65', this.years.length).map((hex: number) => {
@@ -65,9 +49,7 @@ export default class CategoryChart extends Vue {
     });
     lbls = Array.from(new Set(lbls));
     this.chartData = {
-      // ラベル
       labels: lbls,
-      // データ詳細
       datasets: this.years.map((x: string, idx: number) => {
         const arr: number[] = [];
         lbls.forEach((y: string) => {
@@ -84,6 +66,32 @@ export default class CategoryChart extends Vue {
           borderColor: colors[idx],
         };
       }),
+    };
+    this.chartOptions = {
+      title: {
+        display: false,
+      },
+      tooltips: {
+        mode: 'index',
+      },
+      hover: {
+        mode: 'index',
+      },
+      scales: {
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'カテゴリー',
+          },
+        }],
+        yAxes: [{
+          // stacked: true,
+          scaleLabel: {
+            display: true,
+            labelString: '金額',
+          },
+        }],
+      },
     };
   }
 

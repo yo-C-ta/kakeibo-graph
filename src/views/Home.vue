@@ -1,9 +1,16 @@
 <template>
   <div class="home">
-    <MonthlyChart :data="jsonData" :years="years"></MonthlyChart>
-    <CategoryChart :data="jsonData" :years="years"></CategoryChart>
-    <MonthlyCategoryChart :data="jsonData" :years="years" :category="oneCategory"></MonthlyCategoryChart>
-    <CategoryRateChart :data="jsonData" :years="years"></CategoryRateChart>
+    <p v-for="year in years" :key="year">
+      <input type="checkbox" :id="year" v-model="targetYears" v-bind:value="year">
+      <label :for="year">{{ year }}</label>
+    </p>
+    <select name="category" v-model="targetCtgry">
+      <option v-for="category in categorys" :value="category" :key="category">{{ category }}</option>
+    </select>
+    <MonthlyChart :data="jsonData" :years="targetYears"></MonthlyChart>
+    <CategoryChart :data="jsonData" :years="targetYears"></CategoryChart>
+    <MonthlyCategoryChart :data="jsonData" :years="targetYears" :category="targetCtgry"></MonthlyCategoryChart>
+    <CategoryRateChart :data="jsonData" :years="targetYears"></CategoryRateChart>
   </div>
 </template>
 
@@ -24,8 +31,14 @@ import CategoryRateChart from '@/components/CategoryRateChart.vue';
   },
 })
 export default class Home extends Vue {
-  private oneCategory: string = 'ガス代';
+  private targetYears: string[] = [
+    (new Date().getFullYear() - 1).toString(),
+    (new Date().getFullYear()).toString(),
+  ];
+  private targetCtgry: string = '食費';
+
   private years: string[] = [];
+  private categorys: string[] = [];
   private jsonData: Array<{
     year: string,
     month: string,
@@ -38,6 +51,9 @@ export default class Home extends Vue {
     const yr = dt.getFullYear().toString();
     if (this.years.indexOf(yr) === -1) {
       this.years.push(yr);
+    }
+    if (this.categorys.indexOf(x.category) === -1) {
+      this.categorys.push(x.category);
     }
     return {
       year: yr,

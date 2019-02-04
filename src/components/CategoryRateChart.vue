@@ -1,12 +1,13 @@
 <template>
-  <div>
+  <div>各支出カテゴリーの占める割合
     <PieChart :chart-data="chartData" :chart-options="chartOptions"></PieChart>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 import PieChart from '@/components/charts/PieChart.vue';
+import Chart from 'chart.js';
 
 @Component({
   components: {
@@ -14,6 +15,7 @@ import PieChart from '@/components/charts/PieChart.vue';
   },
 })
 export default class CategoryRateChart extends Vue {
+  @Prop() public years!: string[];
   @Prop() public data!: Array<{
     year: string,
     month: string,
@@ -22,42 +24,47 @@ export default class CategoryRateChart extends Vue {
     where: string,
     who: string,
   }>;
-  @Prop() public years!: string[];
 
-  private chartData: any;
-  private chartOptions = {
-    title: {
-      display: true,
-      text: '各支出カテゴリーの占める割合',
-    },
-    tooltips: {
-      mode: 'index',
-    },
-    hover: {
-      mode: 'index',
-    },
-  };
+  private chartData: Chart.ChartData = {};
+  private chartOptions: Chart.ChartOptions = {};
 
   private created() {
+    this.updateChart();
+  }
+
+  @Watch('years')
+  private updtYears() {
+    this.updateChart();
+  }
+
+  private updateChart() {
     const ctgrySpendingData = this.categoryData(this.years);
     const palette = require('google-palette');
-    const colors = palette('mpn65', Object.keys(ctgrySpendingData).length).map((hex: number) => {
+    const colors: string[] = palette('mpn65', Object.keys(ctgrySpendingData).length).map((hex: number) => {
       return '#' + hex;
     });
-
     this.chartData = {
-      // ラベル
       labels: Object.keys(ctgrySpendingData),
-      // データ詳細
       datasets: [{
         data: Object.values(ctgrySpendingData),
         backgroundColor: colors,
       }],
     };
+    this.chartOptions = {
+      title: {
+        display: false,
+      },
+      tooltips: {
+        mode: 'index',
+      },
+      hover: {
+        mode: 'index',
+      },
+    };
   }
 
   private categoryData(years: string[]) {
-    const ctgrySpending: any = {};
+    const ctgrySpending: { [key: string]: number } = {};
     this.data.forEach((x: any) => {
       if (this.years.indexOf(x.year) >= 0) {
         if (!(x.category in ctgrySpending)) {
@@ -66,7 +73,6 @@ export default class CategoryRateChart extends Vue {
         ctgrySpending[x.category] += x.spending;
       }
     });
-
     return ctgrySpending;
   }
 }
