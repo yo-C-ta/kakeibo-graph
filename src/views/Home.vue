@@ -26,7 +26,6 @@
         :key="year"
         v-model="targetYears"
         :native-value="year"
-        size="is-small"
       >{{year}}</b-checkbox-button>
     </b-field>
   </div>
