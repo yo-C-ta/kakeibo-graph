@@ -1,5 +1,6 @@
 <template>
-  <div>カテゴリー毎の支出額
+  <div>
+    <span>カテゴリー毎の支出額</span>
     <LineChart :chart-data="chartData" :chart-options="chartOptions"></LineChart>
   </div>
 </template>
@@ -64,6 +65,7 @@ export default class CategoryChart extends Vue {
           data: arr,
           backgroundColor: 'rgba(0,0,0,0)',
           borderColor: colors[idx],
+          lineTension: 0.1,
         };
       }),
     };

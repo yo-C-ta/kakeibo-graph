@@ -1,16 +1,34 @@
 <template>
   <div class="home">
-    <p v-for="year in years" :key="year">
-      <input type="checkbox" :id="year" v-model="targetYears" v-bind:value="year">
-      <label :for="year">{{ year }}</label>
-    </p>
-    <select name="category" v-model="targetCtgry">
-      <option v-for="category in categorys" :value="category" :key="category">{{ category }}</option>
-    </select>
-    <MonthlyChart :data="jsonData" :years="targetYears"></MonthlyChart>
-    <CategoryChart :data="jsonData" :years="targetYears"></CategoryChart>
-    <MonthlyCategoryChart :data="jsonData" :years="targetYears" :category="targetCtgry"></MonthlyCategoryChart>
-    <CategoryRateChart :data="jsonData" :years="targetYears"></CategoryRateChart>
+    <div class="columns">
+      <div class="column">
+        <div class="box">
+          <MonthlyChart :data="jsonData" :years="targetYears"></MonthlyChart>
+        </div>
+        <div class="box">
+          <CategoryChart :data="jsonData" :years="targetYears"></CategoryChart>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="box">
+          <CategoryRateChart :data="jsonData" :years="targetYears"></CategoryRateChart>
+        </div>
+        <div class="box">
+          <MonthlyCategoryChart :data="jsonData" :years="targetYears" :categorys="categorys"></MonthlyCategoryChart>
+        </div>
+      </div>
+    </div>
+
+    <b-field grouped group-multiline position="is-centered">
+      <b-checkbox-button
+        v-for="year in years"
+        :key="year"
+        v-model="targetYears"
+        :native-value="year"
+        size="is-small"
+      >{{year}}</b-checkbox-button>
+    </b-field>
   </div>
 </template>
 
@@ -21,6 +39,11 @@ import MonthlyChart from '@/components/MonthlyChart.vue';
 import CategoryChart from '@/components/CategoryChart.vue';
 import MonthlyCategoryChart from '@/components/MonthlyCategoryChart.vue';
 import CategoryRateChart from '@/components/CategoryRateChart.vue';
+
+import Buefy from 'buefy';
+import 'buefy/dist/buefy.css';
+
+Vue.use(Buefy);
 
 @Component({
   components: {
@@ -35,7 +58,6 @@ export default class Home extends Vue {
     (new Date().getFullYear() - 1).toString(),
     (new Date().getFullYear()).toString(),
   ];
-  private targetCtgry: string = '食費';
 
   private years: string[] = [];
   private categorys: string[] = [];

@@ -12,7 +12,6 @@ export default class LineChart extends Mixins(Line, mixins.reactiveProp) {
     if (this.chartData.datasets !== undefined) {
       for (const dataset of this.chartData.datasets) {
         dataset.type = 'line';
-        dataset.lineTension = 0.05;
       }
     }
     this.renderChart(this.chartData, this.chartOptions);

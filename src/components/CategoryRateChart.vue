@@ -1,5 +1,6 @@
 <template>
-  <div>各支出カテゴリーの占める割合
+  <div>
+    <span>各支出カテゴリーの占める割合</span>
     <PieChart :chart-data="chartData" :chart-options="chartOptions"></PieChart>
   </div>
 </template>

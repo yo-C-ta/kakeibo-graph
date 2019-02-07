@@ -1,6 +1,12 @@
 <template>
   <div>
-    月ごとの{{category}}の支出額
+    <b-field grouped position="is-centered">
+      <span>月ごとの</span>
+      <b-select name="category" v-model="category" size="is-small">
+        <option v-for="category in categorys" :value="category" :key="category">{{ category }}</option>
+      </b-select>
+      <span>の支出額</span>
+    </b-field>
     <LineChart :chart-data="chartData" :chart-options="chartOptions"></LineChart>
   </div>
 </template>
@@ -17,7 +23,7 @@ import Chart from 'chart.js';
 })
 export default class MonthlyChart extends Vue {
   @Prop() public years!: string[];
-  @Prop() public category!: string;
+  @Prop() public categorys!: string[];
   @Prop() public data!: Array<{
     year: string,
     month: string,
@@ -27,6 +33,7 @@ export default class MonthlyChart extends Vue {
     who: string,
   }>;
 
+  private category: string = '食費';
   private chartData: Chart.ChartData = {};
   private chartOptions: Chart.ChartOptions = {};
 
@@ -44,6 +51,7 @@ export default class MonthlyChart extends Vue {
   }
 
   private updateChart() {
+    const monthCtgryData = this.monthlyData();
     const palette = require('google-palette');
     const colors = palette('mpn65', this.years.length).map((hex: number) => {
       return '#' + hex;
@@ -53,9 +61,10 @@ export default class MonthlyChart extends Vue {
       datasets: this.years.map((x: string, idx: number) => {
         return {
           label: x,
-          data: Object.values(this.monthlyData()[x]),
+          data: monthCtgryData[x] ? Object.values(monthCtgryData[x]) : [],
           backgroundColor: 'rgba(0,0,0,0)',
           borderColor: colors[idx],
+          lineTension: 0.1,
         };
       }),
     };

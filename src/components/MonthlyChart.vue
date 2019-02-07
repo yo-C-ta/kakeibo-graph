@@ -1,5 +1,6 @@
 <template>
-  <div>月毎の支出額
+  <div>
+    <span>月毎の支出額</span>
     <LineChart :chart-data="chartData" :chart-options="chartOptions"></LineChart>
   </div>
 </template>
@@ -50,6 +51,7 @@ export default class MonthlyChart extends Vue {
           data: Object.values(this.monthlyData()[x]),
           backgroundColor: 'rgba(0,0,0,0)',
           borderColor: colors[idx],
+          lineTension: 0.1,
         };
       }),
     };
