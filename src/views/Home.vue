@@ -1,5 +1,14 @@
 <template>
   <div class="home">
+    <b-field grouped group-multiline position="is-centered">
+      <b-checkbox-button
+        v-for="year in years"
+        :key="year"
+        v-model="targetYears"
+        :native-value="year"
+      >{{year}}</b-checkbox-button>
+    </b-field>
+
     <div class="columns">
       <div class="column">
         <div class="box">
@@ -19,25 +28,19 @@
         </div>
       </div>
     </div>
-
-    <b-field grouped group-multiline position="is-centered">
-      <b-checkbox-button
-        v-for="year in years"
-        :key="year"
-        v-model="targetYears"
-        :native-value="year"
-      >{{year}}</b-checkbox-button>
-    </b-field>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import jsonFile from '@/assets/data/Kakeibo.json';
+import confFile from '@/assets/data/Confidential.json';
 import MonthlyChart from '@/components/MonthlyChart.vue';
 import CategoryChart from '@/components/CategoryChart.vue';
 import MonthlyCategoryChart from '@/components/MonthlyCategoryChart.vue';
 import CategoryRateChart from '@/components/CategoryRateChart.vue';
+
+import VueJsonp from 'vue-jsonp';
+Vue.use(VueJsonp);
 
 import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
@@ -53,11 +56,7 @@ Vue.use(Buefy);
   },
 })
 export default class Home extends Vue {
-  private targetYears: string[] = [
-    (new Date().getFullYear() - 1).toString(),
-    (new Date().getFullYear()).toString(),
-  ];
-
+  private targetYears: string[] = [];
   private years: string[] = [];
   private categorys: string[] = [];
   private jsonData: Array<{
@@ -67,23 +66,33 @@ export default class Home extends Vue {
     spending: number,
     where: string,
     who: string,
-  }> = jsonFile.kakeibo.map((x: any) => {
-    const dt = new Date(Date.parse(x.date));
-    const yr = dt.getFullYear().toString();
-    if (this.years.indexOf(yr) === -1) {
-      this.years.push(yr);
-    }
-    if (this.categorys.indexOf(x.category) === -1) {
-      this.categorys.push(x.category);
-    }
-    return {
-      year: yr,
-      month: (dt.getMonth() + 1).toString(),
-      category: x.category,
-      spending: x.spending,
-      where: x.where,
-      who: x.who,
-    };
-  });
+  }> = [];
+
+  private created() {
+    this.$jsonp(confFile.URL, {
+      callbackName: confFile.CB,
+    }).then((json) => {
+      this.jsonData = json.kakeibo.map((x: any) => {
+        const dt = new Date(Date.parse(x.date));
+        const yr = dt.getFullYear().toString();
+        if (this.years.indexOf(yr) === -1) {
+          this.years.push(yr);
+        }
+        if (this.categorys.indexOf(x.category) === -1) {
+          this.categorys.push(x.category);
+        }
+        return {
+          year: yr,
+          month: (dt.getMonth() + 1).toString(),
+          category: x.category,
+          spending: x.spending,
+          where: x.where,
+          who: x.who,
+        };
+      });
+    }).catch((err) => {
+      /* */
+    });
+  }
 }
 </script>

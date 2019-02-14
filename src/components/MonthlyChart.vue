@@ -43,12 +43,13 @@ export default class MonthlyChart extends Vue {
     const colors = palette('mpn65', this.years.length).map((hex: number) => {
       return '#' + hex;
     });
+    const mnthly = this.monthlyData();
     this.chartData = {
       labels: [...Array(12).keys()].map((x: number) => (x.toString() + '月')),
       datasets: this.years.map((x: string, idx: number) => {
         return {
           label: x,
-          data: Object.values(this.monthlyData()[x]),
+          data: Object.keys(mnthly).length !== 0 ? Object.values(mnthly[x]) : [],
           backgroundColor: 'rgba(0,0,0,0)',
           borderColor: colors[idx],
           lineTension: 0.1,
