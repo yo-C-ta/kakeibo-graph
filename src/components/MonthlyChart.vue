@@ -45,7 +45,7 @@ export default class MonthlyChart extends Vue {
     });
     const mnthly = this.monthlyData();
     this.chartData = {
-      labels: [...Array(12).keys()].map((x: number) => (x.toString() + '月')),
+      labels: [...Array(12).keys()].map((x: number) => ((x + 1).toString() + '月')),
       datasets: this.years.map((x: string, idx: number) => {
         return {
           label: x,
