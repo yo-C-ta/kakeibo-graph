@@ -26,8 +26,37 @@ export default class CategoryChart extends Vue {
     who: string,
   }>;
 
-  private chartData: Chart.ChartData = {};
-  private chartOptions: Chart.ChartOptions = {};
+  public chartData: Chart.ChartData = {};
+  public chartOptions: Chart.ChartOptions = {
+    responsive: true,
+    title: {
+      display: false,
+    },
+    tooltips: {
+      mode: 'index',
+    },
+    hover: {
+      mode: 'index',
+    },
+    scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'カテゴリー',
+        },
+        ticks: {
+          autoSkip: false,
+        },
+      }],
+      yAxes: [{
+        // stacked: true,
+        scaleLabel: {
+          display: true,
+          labelString: '金額',
+        },
+      }],
+    },
+  };
 
   private created() {
     this.updateChart();
@@ -68,32 +97,6 @@ export default class CategoryChart extends Vue {
           lineTension: 0.1,
         };
       }),
-    };
-    this.chartOptions = {
-      title: {
-        display: false,
-      },
-      tooltips: {
-        mode: 'index',
-      },
-      hover: {
-        mode: 'index',
-      },
-      scales: {
-        xAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: 'カテゴリー',
-          },
-        }],
-        yAxes: [{
-          // stacked: true,
-          scaleLabel: {
-            display: true,
-            labelString: '金額',
-          },
-        }],
-      },
     };
   }
 

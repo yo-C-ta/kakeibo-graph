@@ -9,25 +9,27 @@
       >{{year}}</b-checkbox-button>
     </b-field>
 
-    <div class="columns">
-      <div class="column">
-        <div class="box">
-          <MonthlyChart :data="jsonData" :years="targetYears"></MonthlyChart>
+    <div v-if="targetYears.length !== 0">
+      <div class="columns">
+        <div class="column">
+          <div class="box">
+            <MonthlyChart :data="jsonData" :years="targetYears"></MonthlyChart>
+          </div>
+          <div class="box">
+            <CategoryChart :data="jsonData" :years="targetYears"></CategoryChart>
+          </div>
         </div>
-        <div class="box">
-          <CategoryChart :data="jsonData" :years="targetYears"></CategoryChart>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="box">
-          <CategoryRateChart :data="jsonData" :years="targetYears"></CategoryRateChart>
-        </div>
-        <div class="box">
-          <MonthlyCategoryChart :data="jsonData" :years="targetYears" :categorys="categorys"></MonthlyCategoryChart>
+        <div class="column">
+          <div class="box">
+            <CategoryRateChart :data="jsonData" :years="targetYears"></CategoryRateChart>
+          </div>
+          <div class="box">
+            <MonthlyCategoryChart :data="jsonData" :years="targetYears" :categorys="categorys"></MonthlyCategoryChart>
+          </div>
         </div>
       </div>
     </div>
+    <div v-else>No data to display</div>
   </div>
 </template>
 
@@ -90,6 +92,7 @@ export default class Home extends Vue {
           who: x.who,
         };
       });
+      this.targetYears.push(this.years[this.years.length - 1]);
     }).catch((err) => {
       /* */
     });

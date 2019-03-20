@@ -27,7 +27,32 @@ export default class MonthlyChart extends Vue {
   }>;
 
   private chartData: Chart.ChartData = {};
-  private chartOptions: Chart.ChartOptions = {};
+  private chartOptions: Chart.ChartOptions = {
+    responsive: true,
+    title: {
+      display: false,
+    },
+    tooltips: {
+      mode: 'index',
+    },
+    hover: {
+      mode: 'index',
+    },
+    scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: '月',
+        },
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: '金額',
+        },
+      }],
+    },
+  };
 
   private created() {
     this.updateChart();
@@ -55,31 +80,6 @@ export default class MonthlyChart extends Vue {
           lineTension: 0.1,
         };
       }),
-    };
-    this.chartOptions = {
-      title: {
-        display: false,
-      },
-      tooltips: {
-        mode: 'index',
-      },
-      hover: {
-        mode: 'index',
-      },
-      scales: {
-        xAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: '月',
-          },
-        }],
-        yAxes: [{
-          scaleLabel: {
-            display: true,
-            labelString: '金額',
-          },
-        }],
-      },
     };
   }
 

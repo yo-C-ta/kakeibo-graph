@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Component, Prop, Watch, Mixins } from 'vue-property-decorator';
-import { Line, mixins } from 'vue-chartjs';
 import Chart from 'chart.js';
+import { Line, mixins } from 'vue-chartjs';
 
 @Component({})
 export default class LineChart extends Mixins(Line, mixins.reactiveProp) {
