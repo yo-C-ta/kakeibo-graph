@@ -27,7 +27,17 @@ export default class CategoryRateChart extends Vue {
   }>;
 
   private chartData: Chart.ChartData = {};
-  private chartOptions: Chart.ChartOptions = {};
+  private chartOptions: Chart.ChartOptions = {
+    title: {
+      display: false,
+    },
+    tooltips: {
+      mode: 'index',
+    },
+    hover: {
+      mode: 'index',
+    },
+  };
 
   private created() {
     this.updateChart();
@@ -50,17 +60,6 @@ export default class CategoryRateChart extends Vue {
         data: Object.values(ctgrySpendingData),
         backgroundColor: colors,
       }],
-    };
-    this.chartOptions = {
-      title: {
-        display: false,
-      },
-      tooltips: {
-        mode: 'index',
-      },
-      hover: {
-        mode: 'index',
-      },
     };
   }
 
