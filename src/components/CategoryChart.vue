@@ -16,6 +16,7 @@ import Chart from 'chart.js';
   },
 })
 export default class CategoryChart extends Vue {
+  @Prop() public target!: string[];
   @Prop() public years!: string[];
   @Prop() public data!: Array<{
     year: string,
@@ -31,6 +32,9 @@ export default class CategoryChart extends Vue {
     responsive: true,
     title: {
       display: false,
+    },
+    legend: {
+      onClick: (e) => e.stopPropagation(),
     },
     tooltips: {
       mode: 'index',
@@ -49,7 +53,6 @@ export default class CategoryChart extends Vue {
         },
       }],
       yAxes: [{
-        // stacked: true,
         scaleLabel: {
           display: true,
           labelString: '金額',
@@ -62,7 +65,7 @@ export default class CategoryChart extends Vue {
     this.updateChart();
   }
 
-  @Watch('years')
+  @Watch('target')
   private updtYears() {
     this.updateChart();
   }
@@ -95,6 +98,7 @@ export default class CategoryChart extends Vue {
           backgroundColor: 'rgba(0,0,0,0)',
           borderColor: colors[idx],
           lineTension: 0.1,
+          hidden: !this.target.includes(x),
         };
       }),
     };

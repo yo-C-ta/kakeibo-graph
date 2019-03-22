@@ -13,18 +13,23 @@
       <div class="columns">
         <div class="column">
           <div class="box">
-            <MonthlyChart :data="jsonData" :years="targetYears"></MonthlyChart>
+            <MonthlyChart :data="jsonData" :years="years" :target="targetYears"></MonthlyChart>
           </div>
           <div class="box">
-            <CategoryChart :data="jsonData" :years="targetYears"></CategoryChart>
+            <CategoryChart :data="jsonData" :years="years" :target="targetYears"></CategoryChart>
           </div>
         </div>
         <div class="column">
           <div class="box">
-            <CategoryRateChart :data="jsonData" :years="targetYears"></CategoryRateChart>
+            <CategoryRateChart :data="jsonData" :years="years"></CategoryRateChart>
           </div>
           <div class="box">
-            <MonthlyCategoryChart :data="jsonData" :years="targetYears" :categorys="categorys"></MonthlyCategoryChart>
+            <MonthlyCategoryChart
+              :data="jsonData"
+              :years="years"
+              :target="targetYears"
+              :categorys="categorys"
+            ></MonthlyCategoryChart>
           </div>
         </div>
       </div>

@@ -22,6 +22,7 @@ import Chart from 'chart.js';
   },
 })
 export default class MonthlyChart extends Vue {
+  @Prop() public target!: string[];
   @Prop() public years!: string[];
   @Prop() public categorys!: string[];
   @Prop() public data!: Array<{
@@ -40,6 +41,10 @@ export default class MonthlyChart extends Vue {
     title: {
       display: false,
     },
+    legend: {
+      onClick: (e) => e.stopPropagation(),
+    },
+
     tooltips: {
       mode: 'index',
     },
@@ -66,7 +71,7 @@ export default class MonthlyChart extends Vue {
     this.updateChart();
   }
 
-  @Watch('years')
+  @Watch('target')
   private updtYears() {
     this.updateChart();
   }
@@ -90,6 +95,7 @@ export default class MonthlyChart extends Vue {
           backgroundColor: 'rgba(0,0,0,0)',
           borderColor: colors[idx],
           lineTension: 0.1,
+          hidden: !this.target.includes(x),
         };
       }),
     };
