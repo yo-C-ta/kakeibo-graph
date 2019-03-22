@@ -1,7 +1,7 @@
 <template>
   <div>
     <span>カテゴリー毎の支出額</span>
-    <LineChart :chart-data="chartData" :chart-options="chartOptions"></LineChart>
+    <LineChart :chart-data="chartData" :xlbl="xlabel" :ylbl="ylabel"></LineChart>
   </div>
 </template>
 
@@ -28,38 +28,8 @@ export default class CategoryChart extends Vue {
   }>;
 
   public chartData: Chart.ChartData = {};
-  public chartOptions: Chart.ChartOptions = {
-    responsive: true,
-    title: {
-      display: false,
-    },
-    legend: {
-      onClick: (e) => e.stopPropagation(),
-    },
-    tooltips: {
-      mode: 'index',
-    },
-    hover: {
-      mode: 'index',
-    },
-    scales: {
-      xAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: 'カテゴリー',
-        },
-        ticks: {
-          autoSkip: false,
-        },
-      }],
-      yAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: '金額',
-        },
-      }],
-    },
-  };
+  private xlabel: string = 'カテゴリー';
+  private ylabel: string = '金額';
 
   private created() {
     this.updateChart();

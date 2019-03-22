@@ -7,7 +7,7 @@
       </b-select>
       <span>の支出額</span>
     </b-field>
-    <LineChart :chart-data="chartData" :chart-options="chartOptions"></LineChart>
+    <LineChart :chart-data="chartData" :xlbl="xlabel" :ylbl="ylabel"></LineChart>
   </div>
 </template>
 
@@ -36,36 +36,8 @@ export default class MonthlyChart extends Vue {
 
   private category: string = '食費';
   private chartData: Chart.ChartData = {};
-  private chartOptions: Chart.ChartOptions = {
-    responsive: true,
-    title: {
-      display: false,
-    },
-    legend: {
-      onClick: (e) => e.stopPropagation(),
-    },
-
-    tooltips: {
-      mode: 'index',
-    },
-    hover: {
-      mode: 'index',
-    },
-    scales: {
-      xAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: '月',
-        },
-      }],
-      yAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: '金額',
-        },
-      }],
-    },
-  };
+  private xlabel: string = '月';
+  private ylabel: string = '金額';
 
   private created() {
     this.updateChart();

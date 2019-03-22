@@ -1,7 +1,7 @@
 <template>
   <div>
     <span>各支出カテゴリーの占める割合</span>
-    <PieChart :chart-data="chartData" :chart-options="chartOptions"></PieChart>
+    <PieChart :chart-data="chartData"></PieChart>
   </div>
 </template>
 
@@ -27,17 +27,6 @@ export default class CategoryRateChart extends Vue {
   }>;
 
   private chartData: Chart.ChartData = {};
-  private chartOptions: Chart.ChartOptions = {
-    title: {
-      display: false,
-    },
-    tooltips: {
-      mode: 'index',
-    },
-    hover: {
-      mode: 'index',
-    },
-  };
 
   private created() {
     this.updateChart();

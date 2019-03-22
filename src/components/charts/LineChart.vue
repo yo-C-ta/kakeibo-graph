@@ -6,7 +6,37 @@ import { Line, mixins } from 'vue-chartjs';
 @Component({})
 export default class LineChart extends Mixins(Line, mixins.reactiveProp) {
   @Prop() public chartData!: Chart.ChartData;
-  @Prop() public chartOptions!: Chart.ChartOptions;
+  @Prop() public xlbl!: string;
+  @Prop() public ylbl!: string;
+  public chartOptions: Chart.ChartOptions = {
+    responsive: true,
+    title: {
+      display: false,
+    },
+    legend: {
+      onClick: (e) => e.stopPropagation(),
+    },
+    tooltips: {
+      mode: 'index',
+    },
+    hover: {
+      mode: 'index',
+    },
+    scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: this.xlbl,
+        },
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: this.ylbl,
+        },
+      }],
+    },
+  };
 
   public mounted() {
     if (this.chartData.datasets !== undefined) {
