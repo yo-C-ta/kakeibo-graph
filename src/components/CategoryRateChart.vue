@@ -16,6 +16,7 @@ import Chart from 'chart.js';
   },
 })
 export default class CategoryRateChart extends Vue {
+  @Prop() public target!: string[];
   @Prop() public years!: string[];
   @Prop() public data!: Array<{
     year: string,
@@ -32,13 +33,13 @@ export default class CategoryRateChart extends Vue {
     this.updateChart();
   }
 
-  @Watch('years')
+  @Watch('target')
   private updtYears() {
     this.updateChart();
   }
 
   private updateChart() {
-    const ctgrySpendingData = this.categoryData(this.years);
+    const ctgrySpendingData = this.categoryData(this.target);
     const palette = require('google-palette');
     const colors: string[] = palette('mpn65', Object.keys(ctgrySpendingData).length).map((hex: number) => {
       return '#' + hex;
@@ -55,10 +56,10 @@ export default class CategoryRateChart extends Vue {
   private categoryData(years: string[]) {
     const ctgrySpending: { [key: string]: number } = {};
     this.data.forEach((x: any) => {
-      if (this.years.indexOf(x.year) >= 0) {
-        if (!(x.category in ctgrySpending)) {
-          ctgrySpending[x.category] = 0;
-        }
+      if (!(x.category in ctgrySpending)) {
+        ctgrySpending[x.category] = 0;
+      }
+      if (years.indexOf(x.year) >= 0) {
         ctgrySpending[x.category] += x.spending;
       }
     });

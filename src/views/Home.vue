@@ -21,7 +21,7 @@
         </div>
         <div class="column">
           <div class="box">
-            <CategoryRateChart :data="jsonData" :years="years"></CategoryRateChart>
+            <CategoryRateChart :data="jsonData" :years="years" :target="targetYears"></CategoryRateChart>
           </div>
           <div class="box">
             <MonthlyCategoryChart

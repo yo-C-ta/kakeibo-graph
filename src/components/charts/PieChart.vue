@@ -16,6 +16,7 @@ export default class PieChart extends Mixins(Pie, mixins.reactiveProp) {
     hover: {
       mode: 'index',
     },
+    cutoutPercentage: 40,
   };
 
   public mounted() {
