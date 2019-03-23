@@ -34,6 +34,12 @@ export default class LineChart extends Mixins(Line, mixins.reactiveProp) {
           display: true,
           labelString: this.ylbl,
         },
+        ticks: {
+          min: 0,
+          callback: (label: any, index: any, labels: any) => {
+            return '¥' + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          },
+        },
       }],
     },
   };
