@@ -28,6 +28,9 @@ export default class LineChart extends Mixins(Line, mixins.reactiveProp) {
           display: true,
           labelString: this.xlbl,
         },
+        ticks: {
+          autoSkip: false,
+        },
       }],
       yAxes: [{
         scaleLabel: {
