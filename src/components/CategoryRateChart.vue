@@ -1,7 +1,7 @@
 <template>
   <div>
     <span>各支出カテゴリーの占める割合</span>
-    <PieChart :chart-data="chartData"></PieChart>
+    <PieChart :chart-data="chartData" :plugins="[textInChart]"></PieChart>
   </div>
 </template>
 
@@ -28,6 +28,39 @@ export default class CategoryRateChart extends Vue {
   }>;
 
   private chartData: Chart.ChartData = {};
+  private textInChart = {
+    afterDraw: (chart: any, easing: string) => {
+      let dataSum = 0;
+      chart.data.datasets[0].data.forEach((elem: any) => {
+        dataSum += elem;
+      });
+      chart.data.datasets.forEach((dataset: any, i: number) => {
+        const meta = chart.getDatasetMeta(i);
+        if (!meta.hidden) {
+          meta.data.forEach((element: any, index: number) => {
+            const dataString = (Math.round(dataset.data[index] / dataSum * 1000) / 10).toString() + '%';
+            const position = element.tooltipPosition();
+
+            chart.ctx.fillStyle = 'white';
+            chart.ctx.font = Chart.helpers.fontString(12, 'normal', 'Helvetica Neue');
+            chart.ctx.textAlign = 'center';
+            chart.ctx.textBaseline = 'middle';
+
+            if (dataString !== '0%') {
+              chart.ctx.fillText(dataString, position.x, position.y);
+            }
+          });
+        }
+      });
+      chart.ctx.fillStyle = 'black';
+      const centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+      const centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+      chart.ctx.font = Chart.helpers.fontString(18, 'normal', 'Helvetica Neue');
+      chart.ctx.textAlign = 'center';
+      chart.ctx.textBaseline = 'middle';
+      chart.ctx.fillText('¥' + dataSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','), centerX, centerY);
+    }
+  };
 
   private created() {
     this.updateChart();
