@@ -59,7 +59,7 @@ export default class CategoryRateChart extends Vue {
       chart.ctx.textAlign = 'center';
       chart.ctx.textBaseline = 'middle';
       chart.ctx.fillText('¥' + dataSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','), centerX, centerY);
-    }
+    },
   };
 
   private created() {
