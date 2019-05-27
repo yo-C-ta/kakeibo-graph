@@ -10,6 +10,15 @@ import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 import LineChart from '@/components/charts/LineChart.vue';
 import Chart from 'chart.js';
 
+interface Data {
+    year: string;
+    month: string;
+    category: string;
+    spending: number;
+    where: string;
+    who: string;
+}
+
 @Component({
     components: {
         LineChart,
@@ -18,14 +27,7 @@ import Chart from 'chart.js';
 export default class CategoryChart extends Vue {
     @Prop() public target!: string[];
     @Prop() public years!: string[];
-    @Prop() public data!: Array<{
-        year: string,
-        month: string,
-        category: string,
-        spending: number,
-        where: string,
-        who: string,
-    }>;
+    @Prop() public data!: Data[];
 
     public chartData: Chart.ChartData = {};
     private xlabel: string = 'カテゴリー';
@@ -47,7 +49,7 @@ export default class CategoryChart extends Vue {
             return '#' + hex;
         });
         let lbls: string[] = [];
-        Object.values(categoryChartData).forEach((x: any) => {
+        Object.values(categoryChartData).forEach((x: { [c: string]: number }) => {
             lbls = lbls.concat(Object.keys(x));
         });
         lbls = Array.from(new Set(lbls));
@@ -75,8 +77,10 @@ export default class CategoryChart extends Vue {
     }
 
     private categoryData() {
-        const ctgrySpending: any = {};
-        this.data.forEach((x: any) => {
+        const ctgrySpending: {
+            [y: string]: { [c: string]: number },
+        } = {};
+        this.data.forEach((x: Data) => {
             if (!(x.year in ctgrySpending)) {
                 ctgrySpending[x.year] = {};
             }

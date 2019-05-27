@@ -10,6 +10,15 @@ import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 import PieChart from '@/components/charts/PieChart.vue';
 import Chart from 'chart.js';
 
+interface Data {
+    year: string;
+    month: string;
+    category: string;
+    spending: number;
+    where: string;
+    who: string;
+}
+
 @Component({
     components: {
         PieChart,
@@ -18,20 +27,13 @@ import Chart from 'chart.js';
 export default class CategoryRateChart extends Vue {
     @Prop() public target!: string[];
     @Prop() public years!: string[];
-    @Prop() public data!: Array<{
-        year: string,
-        month: string,
-        category: string,
-        spending: number,
-        where: string,
-        who: string,
-    }>;
+    @Prop() public data!: Data[];
 
     private chartData: Chart.ChartData = {};
     private textInChart = {
         afterDraw: (chart: any, easing: string) => {
             let dataSum = 0;
-            chart.data.datasets[0].data.forEach((elem: any) => {
+            chart.data.datasets[0].data.forEach((elem: number) => {
                 dataSum += elem;
             });
             chart.data.datasets.forEach((dataset: any, i: number) => {
@@ -87,8 +89,8 @@ export default class CategoryRateChart extends Vue {
     }
 
     private categoryData(years: string[]) {
-        const ctgrySpending: { [key: string]: number } = {};
-        this.data.forEach((x: any) => {
+        const ctgrySpending: { [c: string]: number } = {};
+        this.data.forEach((x: Data) => {
             if (!(x.category in ctgrySpending)) {
                 ctgrySpending[x.category] = 0;
             }

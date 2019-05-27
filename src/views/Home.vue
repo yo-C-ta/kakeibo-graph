@@ -54,6 +54,16 @@ import 'buefy/dist/buefy.css';
 
 Vue.use(Buefy);
 
+export interface Data {
+    year: string;
+    month: string;
+    date: string;
+    category: string;
+    spending: number;
+    where: string;
+    who: string;
+}
+
 @Component({
     components: {
         MonthlyChart,
@@ -66,20 +76,13 @@ export default class Home extends Vue {
     private targetYears: string[] = [];
     private years: string[] = [];
     private categorys: string[] = [];
-    private jsonData: Array<{
-        year: string,
-        month: string,
-        category: string,
-        spending: number,
-        where: string,
-        who: string,
-    }> = [];
+    private jsonData: Data[] = [];
 
     private created() {
         this.$jsonp(confFile.URL, {
             callbackName: confFile.CB,
         }).then((json) => {
-            this.jsonData = json.kakeibo.map((x: any) => {
+            this.jsonData = json.kakeibo.map((x: Data) => {
                 const dt = new Date(Date.parse(x.date));
                 const yr = dt.getFullYear().toString();
                 if (this.years.indexOf(yr) === -1) {

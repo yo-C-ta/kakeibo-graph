@@ -20,13 +20,13 @@ import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 import LineChart from '@/components/charts/LineChart.vue';
 import Chart from 'chart.js';
 
-type Data = {
-    year: string,
-    month: string,
-    category: string,
-    spending: number,
-    where: string,
-    who: string,
+interface Data {
+    year: string;
+    month: string;
+    category: string;
+    spending: number;
+    where: string;
+    who: string;
 }
 
 @Component({
@@ -38,7 +38,7 @@ export default class MonthlyChart extends Vue {
     @Prop() public target!: string[];
     @Prop() public years!: string[];
     @Prop() public categorys!: string[];
-    @Prop() public data!: Array<Data>;
+    @Prop() public data!: Data[];
 
     private category: string = '食費';
     private chartData: Chart.ChartData = {};
@@ -82,7 +82,7 @@ export default class MonthlyChart extends Vue {
 
     private monthlyData() {
         const dateSpending: {
-            [y: string]: { [m: string]: number }
+            [y: string]: { [m: string]: number },
         } = {};
         this.data.forEach((x: Data) => {
             if (x.category === this.category) {
