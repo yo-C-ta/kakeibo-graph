@@ -5,55 +5,55 @@ import { Line, mixins } from 'vue-chartjs';
 
 @Component({})
 export default class LineChart extends Mixins(Line, mixins.reactiveProp) {
-  @Prop() public chartData!: Chart.ChartData;
-  @Prop() public xlbl!: string;
-  @Prop() public ylbl!: string;
-  public chartOptions: Chart.ChartOptions = {
-    responsive: true,
-    title: {
-      display: false,
-    },
-    legend: {
-      onClick: (e) => e.stopPropagation(),
-    },
-    tooltips: {
-      mode: 'index',
-    },
-    hover: {
-      mode: 'index',
-    },
-    scales: {
-      xAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: this.xlbl,
+    @Prop() public chartData!: Chart.ChartData;
+    @Prop() public xlbl!: string;
+    @Prop() public ylbl!: string;
+    public chartOptions: Chart.ChartOptions = {
+        responsive: true,
+        title: {
+            display: false,
         },
-        ticks: {
-          autoSkip: false,
+        legend: {
+            onClick: (e) => e.stopPropagation(),
         },
-      }],
-      yAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: this.ylbl,
+        tooltips: {
+            mode: 'index',
         },
-        ticks: {
-          min: 0,
-          callback: (label: any, index: any, labels: any) => {
-            return '¥' + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-          },
+        hover: {
+            mode: 'index',
         },
-      }],
-    },
-  };
+        scales: {
+            xAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: this.xlbl,
+                },
+                ticks: {
+                    autoSkip: false,
+                },
+            }],
+            yAxes: [{
+                scaleLabel: {
+                    display: true,
+                    labelString: this.ylbl,
+                },
+                ticks: {
+                    min: 0,
+                    callback: (label: any, index: any, labels: any) => {
+                        return '¥' + label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    },
+                },
+            }],
+        },
+    };
 
-  public mounted() {
-    if (this.chartData.datasets !== undefined) {
-      for (const dataset of this.chartData.datasets) {
-        dataset.type = 'line';
-      }
+    public mounted() {
+        if (this.chartData.datasets !== undefined) {
+            for (const dataset of this.chartData.datasets) {
+                dataset.type = 'line';
+            }
+        }
+        this.renderChart(this.chartData, this.chartOptions);
     }
-    this.renderChart(this.chartData, this.chartOptions);
-  }
 }
 </script>
